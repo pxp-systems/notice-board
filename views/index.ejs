@@ -1,0 +1,109 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="shortcut icon" href="#">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/styles.css">
+  <title>Gallery View 3</title>
+  <style>
+    body, html {
+      height: 100%; /* Full viewport height */
+      margin: 0; /* Remove default margin */
+      position: relative; /* Positioning context for centering */
+      overflow: hidden; /* Optional: depends on design needs */
+      background-color: black;
+    }
+    .carousel {
+      width: 100%; /* Full width of the viewport */
+      max-width: 1920px; /* Maximum width of the carousel */
+      height: 720px; /* Fixed height, adjust as needed */
+      position: absolute; /* Absolute positioning */
+      top: 50%; /* Move down by half of the viewport height */
+      left: 50%; /* Move right by half of the viewport width */
+      transform: translate(-50%, -50%); /* Offset the carousel to center it */
+      overflow: hidden; /* Hide anything outside this container */
+    }
+    .slide {
+      position: absolute; /* Absolute positioning relative to the carousel */
+      width: 100%; /* Match width to the carousel */
+      top: 0; /* Top aligned */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%); /* Align perfectly centered */
+      display: none; /* Hide by default, show via JavaScript */
+    }
+    .slide img {
+      height: 100%; /* Full height of the slide */
+      width: auto; /* Auto width to maintain aspect ratio */
+      display: block; /* Remove extra space below image */
+    }
+  </style>
+  
+</head>
+<body>
+  <div class="carousel">
+    <% images.forEach((image, index) => { %>
+      <div class='slide'><img src='/public/uploads/<%= image %>' alt='Image'></div>
+    <% }); %>
+  </div>
+  </div>
+  <script>
+    const carousel = document.querySelector('.carousel');
+    let slides = document.querySelectorAll('.slide');
+    let slideIndex = 0;
+
+    if (slides.length > 0) {
+      slides[0].style.display = 'block'; // Show the first slide initially
+
+      setInterval(() => {
+        slides[slideIndex].style.display = 'none';
+        slideIndex = (slideIndex + 1) % slides.length;
+        slides[slideIndex].style.display = 'block';
+      }, 5000);
+    }
+  </script>
+  <script>
+function updateCarousel(images) {
+    const carousel = document.querySelector('.carousel');
+    carousel.innerHTML = ''; // Clear the carousel
+    images.forEach(image => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        const img = document.createElement('img');
+        // Ensure the 'image' variable contains just the file name
+        img.src = '/public/uploads/' + image.name; // Assuming 'image' is an object with a 'name' property
+        img.alt = 'Image';
+        slide.appendChild(img);
+        carousel.appendChild(slide);
+    });
+
+    let slides = document.querySelectorAll('.slide');
+    let slideIndex = 0;
+
+    // Reset existing intervals before setting a new one
+    if (window.carouselInterval) {
+        clearInterval(window.carouselInterval);
+    }
+
+    if (slides.length > 0) {
+        slides[0].style.display = 'block'; // Show the first slide initially
+
+        window.carouselInterval = setInterval(() => {
+            slides[slideIndex].style.display = 'none';
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].style.display = 'block';
+        }, 5000);
+    }
+}
+
+      
+  
+    setInterval(() => {
+      fetch('/images')
+        .then(response => response.json())
+        .then(images => updateCarousel(images));
+    }, 60000); // Update every 60 seconds
+  </script>
+</body>
+</html>
