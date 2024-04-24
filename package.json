@@ -20,8 +20,8 @@
     "node": "^18.20.2",
     "sharp": "^0.33.3",
     "util": "^0.12.5"
-  }
+  },
   {"scripts": {
-    "start": "node app.js"
-}
+    "start": "node app.js" }
+  }
 
