@@ -21,5 +21,7 @@
     "sharp": "^0.33.3",
     "util": "^0.12.5"
   }
+  {"scripts": {
+    "start": "node app.js"
 }
 
