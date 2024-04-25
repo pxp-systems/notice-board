@@ -61,7 +61,7 @@
         slides[slideIndex].style.display = 'none';
         slideIndex = (slideIndex + 1) % slides.length;
         slides[slideIndex].style.display = 'block';
-      }, 200000);
+      }, 10000);
     }
   </script>
   <script>
@@ -94,7 +94,7 @@ function updateCarousel(images) {
             slides[slideIndex].style.display = 'none';
             slideIndex = (slideIndex + 1) % slides.length;
             slides[slideIndex].style.display = 'block';
-        }, 20000);
+        }, 10000);
     }
 }
 
@@ -104,7 +104,7 @@ function updateCarousel(images) {
       fetch('/images')
         .then(response => response.json())
         .then(images => updateCarousel(images));
-    }, 60000); // Update every 60 seconds
+    }, 160000); // Update every 160 seconds
   </script>
 </body>
 </html>
