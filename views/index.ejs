@@ -1,11 +1,10 @@
-<!-- views/index.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="shortcut icon" href="#">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="shortcut icon" href="#">
   <title>Gallery View 3</title>
   <style>
     body, html {
@@ -40,7 +39,6 @@
       display: block; /* Remove extra space below image */
     }
   </style>
-  
 </head>
 <body>
   <div class="carousel">
@@ -48,63 +46,45 @@
       <div class='slide'><img src='/public/uploads/<%= image %>' alt='Image'></div>
     <% }); %>
   </div>
-  </div>
-  <script>
-    const carousel = document.querySelector('.carousel');
-    let slides = document.querySelectorAll('.slide');
-    let slideIndex = 0;
 
-    if (slides.length > 0) {
-      slides[0].style.display = 'block'; // Show the first slide initially
-
-      setInterval(() => {
-        slides[slideIndex].style.display = 'none';
-        slideIndex = (slideIndex + 1) % slides.length;
-        slides[slideIndex].style.display = 'block';
-      }, 10000);
-    }
-  </script>
   <script>
-function updateCarousel(images) {
-    const carousel = document.querySelector('.carousel');
-    carousel.innerHTML = ''; // Clear the carousel
-    images.forEach(image => {
+    function updateCarousel(images) {
+      const carousel = document.querySelector('.carousel');
+      carousel.innerHTML = ''; // Clear the carousel
+      images.forEach(image => {
         const slide = document.createElement('div');
         slide.className = 'slide';
         const img = document.createElement('img');
-        // Ensure the 'image' variable contains just the file name
         img.src = '/public/uploads/' + image.name; // Assuming 'image' is an object with a 'name' property
         img.alt = 'Image';
         slide.appendChild(img);
         carousel.appendChild(slide);
-    });
+      });
 
-    let slides = document.querySelectorAll('.slide');
-    let slideIndex = 0;
+      const slides = document.querySelectorAll('.slide');
+      let slideIndex = 0;
 
-    // Reset existing intervals before setting a new one
-    if (window.carouselInterval) {
+      // Reset existing intervals before setting a new one
+      if (window.carouselInterval) {
         clearInterval(window.carouselInterval);
-    }
+      }
 
-    if (slides.length > 0) {
+      if (slides.length > 0) {
         slides[0].style.display = 'block'; // Show the first slide initially
 
         window.carouselInterval = setInterval(() => {
-            slides[slideIndex].style.display = 'none';
-            slideIndex = (slideIndex + 1) % slides.length;
-            slides[slideIndex].style.display = 'block';
-        }, 10000);
+          slides[slideIndex].style.display = 'none';
+          slideIndex = (slideIndex + 1) % slides.length;
+          slides[slideIndex].style.display = 'block';
+        }, 10000); // Rotate slides every 10 seconds
+      }
     }
-}
 
-      
-  
     setInterval(() => {
       fetch('/images')
         .then(response => response.json())
         .then(images => updateCarousel(images));
-    }, 160000); // Update every 160 seconds
+    }, 160000); // Fetch new images to update the carousel every 160 seconds
   </script>
 </body>
 </html>
