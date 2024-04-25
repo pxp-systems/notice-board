@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
       return;
     }
     const images = files.filter(file => !/(^|\/)\.[^\/\.]/g.test(file)); // Ignore hidden files
-    console.log(images);
+    //console.log(images);
     res.render('index', { images });
   });
 });
@@ -38,43 +38,30 @@ const upload = multer({ storage });
 const sharp = require('sharp');  // Make sure to require sharp at the top of your file
 
 function resizeImage(req, res, next) {
-    if (!req.file) {
-        next();
-        return;  // Return to stop further execution if no file is uploaded
-    }
-  
-    const maxWidth = 1080;
-    const maxHeight = 720;
+  if (!req.file) {
+      next();
+      return;  // Return to stop further execution if no file is uploaded
+  }
 
-    // Resize the image with Sharp using more refined control
-    sharp(req.file.buffer)
-        .metadata()
-        .then(metadata => {
-            // Determine scaling factors to not exceed max dimensions while preserving aspect ratio
-            const widthScale = maxWidth / metadata.width;
-            const heightScale = maxHeight / metadata.height;
-            const scale = Math.min(widthScale, heightScale);
+  const targetWidth = 1280;
+  const targetHeight = 720;
 
-            const newHeight = Math.min(Math.floor(metadata.height * scale), maxHeight);
-            const newWidth = Math.min(Math.floor(metadata.width * scale), maxWidth);
-            console.log(`Resizing image to ${newWidth}x${newHeight}`);
-            
-            return sharp(req.file.buffer)
-                .resize(newWidth, newHeight, {
-                    fit: sharp.fit.inside,
-                    withoutEnlargement: false
-                })
-                .toBuffer();
-        })
-        .then(resizedBuffer => {
-            req.file.buffer = resizedBuffer;
-            req.file.size = resizedBuffer.length;
-            next();
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(500).send('Something went wrong with image resizing!');
-        });
+  // Resize the image with Sharp to fit within the target dimensions while preserving the aspect ratio
+  sharp(req.file.buffer)
+      .resize(targetWidth, targetHeight, {
+          fit: sharp.fit.inside,  // Resize the image to fit inside the provided dimensions without cropping
+          
+      })
+      .toBuffer()
+      .then(resizedBuffer => {
+          req.file.buffer = resizedBuffer;
+          req.file.size = resizedBuffer.length;
+          next();
+      })
+      .catch(error => {
+          console.error(error);
+          res.status(500).send('Something went wrong with image resizing!');
+      });
 }
 
   
@@ -144,6 +131,20 @@ app.get('/images', (req, res) => {
       }));
       //console.log("called", fileInfos)
       res.status(200).send(fileInfos);
+  });
+});
+
+app.get('/carousel-image-list', (req, res) => {
+  const dir = path.join(__dirname, 'public/uploads');
+  fs.readdir(dir, (err, files) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('An error occurred');
+      return;
+    }
+    const images = files.filter(file => !/(^|\/)\.[^\/\.]/g.test(file)); // Ignore hidden files
+    //console.log("image-list: ", images);
+    res.json(images);
   });
 });
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,44 +8,59 @@
   <link rel="shortcut icon" href="#">
   <title>Gallery View 3</title>
   <style>
-    body, html {
-      height: 100%; /* Full viewport height */
-      margin: 0; /* Remove default margin */
-      position: relative; /* Positioning context for centering */
-      overflow: hidden; /* Optional: depends on design needs */
+    body,
+    html {
+      height: 100%;
+      /* Full viewport height */
+      margin: 0;
+      /* Remove default margin */
+      position: relative;
+      /* Positioning context for centering */
+      overflow: hidden;
+      /* Optional: depends on design needs */
       background-color: black;
     }
+
     .carousel {
-      width: 100%; /* Full width of the viewport */
-      max-width: 1280px; /* Maximum width of the carousel */
-      height: 720px; /* Fixed height, adjust as needed */
-      position: absolute; /* Absolute positioning */
-      top: 50%; /* Move down by half of the viewport height */
-      left: 50%; /* Move right by half of the viewport width */
-      transform: translate(-50%, -50%); /* Offset the carousel to center it */
-      overflow: hidden; /* Hide anything outside this container */
-      text-align: center; /* Center the content inside the carousel */
+      width: 100%;
+      max-width: 1280px;
+      /* Maximum width of the carousel */
+      height: 720px;
+      /* Fixed height */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      /* Center the carousel */
+      overflow: hidden;
     }
+
     .slide {
-      position: absolute; /* Absolute positioning relative to the carousel */
-      width: 100%; /* Match width to the carousel */
-      top: 0; /* Top aligned */
-      left: 50%; /* Center horizontally */
-      transform: translateX(-50%); /* Align perfectly centered */
-      display: none; /* Hide by default, show via JavaScript */
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      /* Full height of the carousel */
+      top: 0;
+      left: 0;
+      /* Align to the left */
+      display: none;
+      /* Hide by default, show via JavaScript */
     }
+
     .slide img {
-      height: 100%; /* Full height of the slide */
-      width: auto; /* Auto width to maintain aspect ratio */
-      display: block; /* Remove extra space below image */
+      width: 100%;
+      /* Full width to match the slide */
+      height: 100%;
+      /* Full height to match the slide */
     }
   </style>
 </head>
+
 <body>
   <div class="carousel">
-    <% images.forEach((image, index) => { %>
+    <% images.forEach((image, index)=> { %>
       <div class='slide'><img src='/public/uploads/<%= image %>' alt='Image'></div>
-    <% }); %>
+      <% }); %>
   </div>
 
   <script>
@@ -81,12 +97,19 @@
         }, 10000); // Rotate slides every 10 seconds
       }
     }
+    //initial call to updateCarousel
+    fetch('/images')
+      .then(response => response.json())
+      .then(images => updateCarousel(images));
 
     setInterval(() => {
       fetch('/images')
         .then(response => response.json())
         .then(images => updateCarousel(images));
     }, 160000); // Fetch new images to update the carousel every 160 seconds
+
+
   </script>
 </body>
+
 </html>
