@@ -24,6 +24,7 @@
       left: 50%; /* Move right by half of the viewport width */
       transform: translate(-50%, -50%); /* Offset the carousel to center it */
       overflow: hidden; /* Hide anything outside this container */
+      text-align: center; /* Center the content inside the carousel */
     }
     .slide {
       position: absolute; /* Absolute positioning relative to the carousel */
@@ -60,7 +61,7 @@
         slides[slideIndex].style.display = 'none';
         slideIndex = (slideIndex + 1) % slides.length;
         slides[slideIndex].style.display = 'block';
-      }, 5000);
+      }, 20000);
     }
   </script>
   <script>
