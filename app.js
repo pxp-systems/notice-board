@@ -84,20 +84,26 @@ function resizeImage(req, res, next) {
     if (!req.file) {
       return res.status(400).send('No file uploaded.');
     }
-  
+
+    // Check if the password is correct
+    const { password } = req.body;
+    if (password !== process.env.password) {
+      return res.status(401).send('Incorrect password.');
+    }
+
     // Set the original filename before saving
     req.file.originalname = req.file.originalname;
-  
+
     // Upload to the desired target folder
     const targetPath = path.join(__dirname, 'public/uploads');
-  
+
     // Create the target folder if not already existent
     if (!fs.existsSync(targetPath)) {
       fs.mkdirSync(targetPath);
     }
-  
+
     fs.writeFileSync(path.join(targetPath, req.file.originalname), req.file.buffer);
-  
+
     // Send the response to the client
     res.status(200).send('Image upload successful');
   });
