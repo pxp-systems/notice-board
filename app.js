@@ -43,7 +43,7 @@ function resizeImage(req, res, next) {
       return;  // Return to stop further execution if no file is uploaded
   }
 
-  const targetWidth = 1080;
+  const targetWidth = 1024;
   const targetHeight = 768;
 
   // Resize the image with Sharp to fit within the target dimensions while preserving the aspect ratio
