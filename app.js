@@ -75,7 +75,7 @@ app.post('/upload', upload.single('image'), resizeImage, (req, res) => {
 
   
   // Check if the password is correct
-  const { password } = req.body;
+  const { password } = req.body.password;
   console.log(password, process.env.PASSWORD )
   if (password !== process.env.PASSWORD) {
     return res.status(401).send('Incorrect password.');
