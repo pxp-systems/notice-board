@@ -4,18 +4,13 @@
   "description": "A simple notice board that allows upload of inages which are then scaled and displayed on a TV via a raspberry pi",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "build": "build"
+    "start": "node app.js"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "4.19.2",
     "multer": "^1.4.5-lts.1",
     "sharp": "^0.33.3",
-    "express": "4.19.2",
     "util": "^0.12.5"
-  },
-  
-  "scripts": {
-    "start": "node app.js" 
   }
 }
-    
