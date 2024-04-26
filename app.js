@@ -139,6 +139,14 @@ app.use(express.json());
 app.post('/delete-images', (req, res) => {
   const { selectedImages } = req.body;
 
+  // Check if the password is correct
+  const { password } = req.body;
+  if (password !== process.env.password) {
+    return res.status(401).send('Incorrect password.');
+  }else {
+    res.status(401).send("Unauthorized: Incorrect Password");
+}
+
   if (!selectedImages || selectedImages.length === 0) {
     return res.status(400).send({ message: 'No images specified for deletion' });
   }
