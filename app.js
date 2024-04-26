@@ -96,15 +96,6 @@ app.post('/upload', upload.single('image'), resizeImage, (req, res) => {
 });
 
 
-app.post('/upload', upload.single('image'), (req, res) => {
-  const tempPath = req.file.path;
-  const targetPath1 = path.join(__dirname, 'public/uploads', req.file.originalname);
-
-  fs.rename(tempPath, targetPath1, (err) => {
-    if (err) return res.status(500).send(err);
-    res.status(200).send('Image uploaded successfully');
-  });
-});
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
