@@ -36,6 +36,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 // Middleware to resize the image
 const sharp = require('sharp');  // Make sure to require sharp at the top of your file
+const { log } = require('console');
 
 function resizeImage(req, res, next) {
   if (!req.file) {
@@ -72,8 +73,10 @@ app.post('/upload', upload.single('image'), resizeImage, (req, res) => {
     return res.status(400).send('No file uploaded.');
   }
 
+  
   // Check if the password is correct
   const { password } = req.body;
+  console.log(password, process.env.PASSWORD )
   if (password !== process.env.PASSWORD) {
     return res.status(401).send('Incorrect password.');
   }
