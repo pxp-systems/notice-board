@@ -29,11 +29,11 @@ app.get('/upload', (req, res) => {
 
 app.listen(3000, () => console.log('Server started on port 3000'));
 
-
-
 // Configure Multer Storage to resize the image
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+
 // Middleware to resize the image
 const sharp = require('sharp');  // Make sure to require sharp at the top of your file
 const { log } = require('console');
@@ -64,7 +64,7 @@ function resizeImage(req, res, next) {
       res.status(500).send('Something went wrong with image resizing!');
     });
 }
-
+// Define the multer upload middleware
 
 // Upload middleware handling the file and processing image
 app.post('/upload', upload.single('image'), resizeImage, (req, res) => {
@@ -73,29 +73,35 @@ app.post('/upload', upload.single('image'), resizeImage, (req, res) => {
     return res.status(400).send('No file uploaded.');
   }
 
-  
+
   // Check if the password is correct
-  const { password } = req.body.password;
-  console.log(password, process.env.PASSWORD )
-  if (password !== process.env.PASSWORD) {
+  const { password } = req.body;
+
+  //const password = req.body.password;
+  console.log("upload", password, process.env.PASSWORD)
+  if (password === process.env.PASSWORD) {
+    // Set the original filename before saving
+    req.file.originalname = req.file.originalname;
+
+    // Upload to the desired target folder
+    const targetPath = path.join(__dirname, 'public/uploads');
+
+    // Create the target folder if not already existent
+    if (!fs.existsSync(targetPath)) {
+      fs.mkdirSync(targetPath);
+    }
+
+    fs.writeFileSync(path.join(targetPath, req.file.originalname), req.file.buffer);
+
+    // Send the response to the client
+    res.status(200).send('Image upload successful');
+
+  } else {
+    console.log("Incorrect password...")
     return res.status(401).send('Incorrect password.');
   }
 
-  // Set the original filename before saving
-  req.file.originalname = req.file.originalname;
 
-  // Upload to the desired target folder
-  const targetPath = path.join(__dirname, 'public/uploads');
-
-  // Create the target folder if not already existent
-  if (!fs.existsSync(targetPath)) {
-    fs.mkdirSync(targetPath);
-  }
-
-  fs.writeFileSync(path.join(targetPath, req.file.originalname), req.file.buffer);
-
-  // Send the response to the client
-  res.status(200).send('Image upload successful');
 });
 
 
@@ -134,7 +140,7 @@ app.post('/delete-images', (req, res) => {
   const { selectedImages, password } = req.body;
 
   // Logging the password (be cautious about logging sensitive information in production)
-  console.log(password, process.env.PASSWORD);
+  console.log("delete ", password, process.env.PASSWORD);
 
   // Check if the password is correct
   if (password === process.env.PASSWORD) { // Use '===' for strict comparison and make sure environment variable is correctly referenced

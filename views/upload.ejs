@@ -1,114 +1,116 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Upload Image</title>
 </head>
-
 <body>
     <h1>Upload Image</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data" novalidate>
-        <input type="password" name="password" placeholder="Enter password" required>
+    <form id="upload-form" enctype="multipart/form-data">
         <input type="file" name="image" accept="image/*" required>
         <input type="submit" value="Upload">
     </form>
+
     <button onclick="deleteSelectedImages()">Delete Selected Images</button>
     <div id="image-list"></div>
+    <div id="feedback" style="color: red;"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            listImages(); // Call to list images on page load
-        });
-
-        function listImages() {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/images', true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    var images = JSON.parse(xhr.responseText);
-                    var imageList = document.getElementById('image-list');
-                    imageList.innerHTML = '';
-
-                    images.forEach((image) => {
-                        var label = document.createElement('label');
-                        var checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.name = 'selectedImages';
-                        checkbox.value = image.url;
-
-                        var img = document.createElement('img');
-                        img.src = image.url;
-                        img.alt = image.name;
-                        img.style.width = '100px'; // Set image size
-
-                        label.appendChild(checkbox);
-                        label.appendChild(img);
-                        imageList.appendChild(label);
-                    });
-                } else {
-                    console.error('Failed to retrieve images');
-                }
-            };
-            xhr.send();
-        }
-
-        function uploadFile(file) {
-            var formData = new FormData();
-            formData.append("image", file);
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/upload', true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    console.log('Upload successful');
-                    listImages(); // Refresh the list after uploading
-                } else {
-                    console.log('Upload failed');
-                }
-            };
-            xhr.send(formData);
-            xhr.send(file);
-        }
-
-        document.querySelector('form').addEventListener('submit', function (e) {
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            var file = document.querySelector('input[type="file"]').files[0];
-            console.log(file); // Log the selected file
-            if (file) {
-                console.log('Uploading file...'); // Log before uploading
-                uploadFile(file);
+            const fileInput = document.querySelector('input[type="file"]');
+            if (!fileInput.files.length) {
+                displayFeedback("No file selected!");
+                return;
+            }
+
+            const password = prompt("Please enter the password to upload images:");
+            if (!password) {
+                displayFeedback("Password is required to upload images!");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            formData.append('password', password);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.text();
+                console.log(result);
+                displayFeedback("Upload successful!");
+                listImages();
+            } catch (error) {
+                console.error('Error:', error);
+                displayFeedback("Upload failed!");
             }
         });
 
-        function deleteSelectedImages() {
-            var selectedImages = Array.from(document.querySelectorAll('input[name="selectedImages"]:checked')).map(input => input.value);
-            if (selectedImages.length === 0) {
+        async function listImages() {
+            try {
+                const response = await fetch('/images');
+                const images = await response.json();
+                const imageList = document.getElementById('image-list');
+                imageList.innerHTML = '';
+                images.forEach((image) => {
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'selectedImages';
+                    checkbox.value = image.url;
+                    const img = document.createElement('img');
+                    img.src = image.url;
+                    img.alt = image.name;
+                    img.style.width = '100px'; // Set image size
+                    label.appendChild(checkbox);
+                    label.appendChild(img);
+                    imageList.appendChild(label);
+                });
+            } catch {
+                console.error('Failed to retrieve images');
+                displayFeedback("Failed to load images!");
+            }
+        }
+
+        async function deleteSelectedImages() {
+            const selectedImages = Array.from(document.querySelectorAll('input[name="selectedImages"]:checked')).map(input => input.value);
+            if (!selectedImages.length) {
                 alert("No images selected!");
                 return;
             }
 
-            var password = prompt("Please enter the password to delete images:");
+            const password = prompt("Please enter the password to delete images:");
             if (!password) {
                 alert("Password is required to delete images!");
                 return;
             }
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/delete-images', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function () {
-                if (xhr.status === 200) {
+            try {
+                const response = await fetch('/delete-images', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({selectedImages, password})
+                });
+                if (response.ok) {
                     console.log('Images deleted successfully');
-                    listImages(); // Refresh the list after deleting
+                    listImages();
+                    displayFeedback("Images deleted successfully!");
                 } else {
-                    console.error('Failed to delete images');
+                    throw new Error('Deletion failed');
                 }
-            };
-            xhr.send(JSON.stringify({ selectedImages: selectedImages, password: password }));
+            } catch {
+                console.error('Failed to delete images');
+                displayFeedback("Failed to delete images!");
+            }
         }
 
+        function displayFeedback(message) {
+            document.getElementById('feedback').textContent = message;
+        }
 
+        document.addEventListener('DOMContentLoaded', listImages);
     </script>
 </body>
-
 </html>
