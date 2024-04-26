@@ -6,7 +6,7 @@
 </head>
 
 <body>
-
+    <h1>Upload Image</h1>
     <form action="/upload" method="post" enctype="multipart/form-data" novalidate>
         <input type="password" name="password" placeholder="Enter password" required>
         <input type="file" name="image" accept="image/*" required>
@@ -53,23 +53,29 @@
         }
 
         function uploadFile(file) {
+            var formData = new FormData();
+            formData.append("image", file);
+
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload', true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
-                    console.log('File uploaded successfully');
+                    console.log('Upload successful');
                     listImages(); // Refresh the list after uploading
                 } else {
-                    console.error('Failed to upload file');
+                    console.log('Upload failed');
                 }
             };
+            xhr.send(formData);
             xhr.send(file);
         }
 
         document.querySelector('form').addEventListener('submit', function (e) {
             e.preventDefault();
             var file = document.querySelector('input[type="file"]').files[0];
+            console.log(file); // Log the selected file
             if (file) {
+                console.log('Uploading file...'); // Log before uploading
                 uploadFile(file);
             }
         });
