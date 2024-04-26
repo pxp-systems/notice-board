@@ -134,20 +134,6 @@ app.get('/images', (req, res) => {
   });
 });
 
-app.get('/carousel-image-list', (req, res) => {
-  const dir = path.join(__dirname, 'public/uploads');
-  fs.readdir(dir, (err, files) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('An error occurred');
-      return;
-    }
-    const images = files.filter(file => !/(^|\/)\.[^\/\.]/g.test(file)); // Ignore hidden files
-    //console.log("image-list: ", images);
-    res.json(images);
-  });
-});
-
 app.use(express.json());
 // Route to delete images
 app.post('/delete-images', (req, res) => {

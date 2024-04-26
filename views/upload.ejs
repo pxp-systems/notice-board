@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Upload Image</title>
 </head>
@@ -15,19 +16,19 @@
     <div id="image-list"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             listImages(); // Call to list images on page load
         });
 
         function listImages() {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', '/images', true);
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     var images = JSON.parse(xhr.responseText);
                     var imageList = document.getElementById('image-list');
                     imageList.innerHTML = '';
-                    
+
                     images.forEach((image) => {
                         var label = document.createElement('label');
                         var checkbox = document.createElement('input');
@@ -52,23 +53,20 @@
         }
 
         function uploadFile(file) {
-            var formData = new FormData();
-            formData.append("image", file);
-
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload', true);
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
-                    console.log('Upload successful');
+                    console.log('File uploaded successfully');
                     listImages(); // Refresh the list after uploading
                 } else {
-                    console.log('Upload failed');
+                    console.error('Failed to upload file');
                 }
             };
-            xhr.send(formData);
+            xhr.send(file);
         }
 
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.querySelector('form').addEventListener('submit', function (e) {
             e.preventDefault();
             var file = document.querySelector('input[type="file"]').files[0];
             if (file) {
@@ -81,7 +79,7 @@
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/delete-images', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     console.log('Images deleted successfully');
                     listImages(); // Refresh the list after deleting
@@ -93,4 +91,5 @@
         }
     </script>
 </body>
+
 </html>
