@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="shortcut icon" href="#">
+  <title>Gallery View 3</title>
+  <style>
+    body,
+    html {
+      height: 100%;
+      /* Full viewport height */
+      margin: 0;
+      /* Remove default margin */
+      position: relative;
+      /* Positioning context for centering */
+    }
+
+    #slideshow {
+      position: relative;
+      height: 300px; /* Adjust as needed */
+      width: 500px; /* Adjust as needed */
+    }
+
+    .slideshow-image {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="slideshow">
+    <% images.forEach((image, index) => { %>
+      <img class="slideshow-image" src="/public/uploads/<%= image %>" alt="Image" style="<%= index === 0 ? '' : 'display: none;' %>">
+    <% }); %>
+  </div>
+
+  <script>
+    let currentImageIndex = 0;
+    const images = document.querySelectorAll('.slideshow-image');
+
+    setInterval(() => {
+      // Hide the current image
+      images[currentImageIndex].style.display = 'none';
+
+      // Move to the next image, looping back to the first image if necessary
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+
+      // Show the next image
+      images[currentImageIndex].style.display = 'block';
+    }, 3000); // Change image every 3 seconds
+  </script>
+</body>
+
+</html>
