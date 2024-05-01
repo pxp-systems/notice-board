@@ -77,6 +77,8 @@ sudo install node
 sudo git clone https://github.com/pxp-systems/notice-board
 cd notice-board/
 sudo npm install
+sudo chown -R user:group /notice-board
+
 ```
 
 
