@@ -34,7 +34,7 @@ sudo make install
 sudo /usr/local/bin/noip2 -C
 ```
 ## Startup scripts
-### 7. sudo nano /etc/init.d/noip2
+### 7. edit script
 ```
 sudo nano /etc/init.d/noip2
 ```
@@ -60,11 +60,16 @@ esac
 
 exit 0
 ```
-## Get NVM working
-### 7. sudo nano /etc/init.d/noip2
+## Get NVM / Node working
+### 9. NVM
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 ```
 ```
 source ~/.bashrc
 ```
+### 10. Node
+```
+sudo install node
+```
+
