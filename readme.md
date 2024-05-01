@@ -60,3 +60,11 @@ esac
 
 exit 0
 ```
+## Get NVM working
+### 7. sudo nano /etc/init.d/noip2
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+```
+```
+source ~/.bashrc
+```
