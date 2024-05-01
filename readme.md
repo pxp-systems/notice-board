@@ -81,4 +81,55 @@ sudo chown -R user:group /notice-board
 
 ```
 
+____
+# Other useful startups
+``` 
+sudo nano ~/startup_script.sh
+```
 
+```
+#!/bin/bash
+export PATH=$PATH:/home/admin/.nvm/versions/node/v22.0.0/bin/node
+export DISPLAY=:0
+cd ~/notice-board
+npm start
+firefox --kiosk http://localhost:3000 &
+```
+
+```
+chmod +x ~/startup_script.sh
+```
+```
+nano ~/.xinitrc
+```
+```
+xset s off         # don't activate screensaver
+xset -dpms         # disable DPMS (Energy Star) features
+xset s noblank     # don't blank the video device
+```
+
+```
+sudo nano /etc/systemd/system/startup-script.service
+```
+
+```
+[Unit]
+Description=Start my custom startup script
+After=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/bin/bash /home/pi/startup_script.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+sudo systemctl daemon-reload
+```
+
+```
+sudo systemctl enable startup-script.service
+```
