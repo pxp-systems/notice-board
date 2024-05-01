@@ -72,4 +72,11 @@ source ~/.bashrc
 ```
 sudo install node
 ```
+## Install app
+```
+sudo git clone https://github.com/pxp-systems/notice-board
+cd notice-board/
+sudo npm install
+```
+
 
