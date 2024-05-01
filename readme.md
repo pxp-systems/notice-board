@@ -36,7 +36,7 @@ sudo /usr/local/bin/noip2 -C
 ## Startup scripts
 ### 7. sudo nano /etc/init.d/noip2
 ```
-sudo /usr/local/bin/noip2 -C
+sudo nano /etc/init.d/noip2
 ```
 ### 8. Add This Script
 ```
