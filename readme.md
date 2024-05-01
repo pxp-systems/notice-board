@@ -89,11 +89,13 @@ sudo nano ~/startup_script.sh
 
 ```
 #!/bin/bash
-export PATH=$PATH:/home/admin/.nvm/versions/node/v22.0.0/bin/node
+export PATH=$PATH:/home/admin/.nvm/versions/node/v22.0.0/bin
 export DISPLAY=:0
-cd ~/notice-board
-npm start
+cd /home/admin/notice-board
+npm start &
+sleep 10  # Waits for 10 seconds to ensure npm starts
 firefox --kiosk http://localhost:3000 &
+wait
 ```
 
 ```
@@ -115,12 +117,14 @@ sudo nano /etc/systemd/system/startup-script.service
 ```
 [Unit]
 Description=Start my custom startup script
-After=multi-user.target
+After=network.target graphical.target
 
 [Service]
-Type=simple
-User=pi
-ExecStart=/bin/bash /home/pi/startup_script.sh
+Type=forking
+User=admin
+ExecStart=/bin/bash /home/admin/startup_script.sh
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
