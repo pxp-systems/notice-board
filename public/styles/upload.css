@@ -1,0 +1,72 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* More modern font */
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Lighter background for less strain */
+}
+
+.block {
+    display: block;
+    width: 90%; /* Reduced to give space around elements */
+    height: 50px;  
+    border: none;
+    background-color: #4CAF50; /* Slightly different shade of green */
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    margin: 10px auto; /* Centers block and adds margin for spacing */
+}
+
+.block:disabled {
+    background-color: #ccc;
+    color: #333;
+    cursor: not-allowed;
+}
+
+#upload-form {
+    width: 90%;
+    margin: 0 auto; /* Center form */
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adds subtle shadow */
+}
+
+#upload-form input[type="file"],
+#upload-form input[type="submit"] {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+#upload-form input[type="submit"] {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+
+#image-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+#image-list img {
+    width: 45%;
+    margin: 5px;
+    border-radius: 5px; /* Rounded corners for images */
+}
+
+@media only screen and (max-width: 768px) {
+    .block, #upload-form {
+        width: 95%; /* More responsive width */
+    }
+    #image-list img {
+        width: 90%; /* Larger images on smaller screens */
+    }
+}
