@@ -45,13 +45,12 @@
     <% }); %>
     <div class="black-slide"></div>
   </div>
-
   <script>
     let currentImageIndex = 0;
     let showBlackSlide = false;
     const images = document.querySelectorAll('.slideshow-image');
     const blackSlide = document.querySelector('.black-slide');
-
+  
     function changeSlide() {
       if (showBlackSlide) {
         // Hide black slide
@@ -73,17 +72,14 @@
         }, 1000); // Show black slide for 1 second
       }
       showBlackSlide = !showBlackSlide;
+      // Reload the page when the last image has finished displaying
+      if (currentImageIndex === 0 && !showBlackSlide) {
+        location.reload();
+      }
     }
     
     changeSlide();
-
-    // Check if the current image index is equal to the length of the images array minus one
-    let intervalId = setInterval(() => {
-      if (currentImageIndex === images.length - 1) {
-        clearInterval(intervalId);
-        location.reload();
-      }
-    }, 5000);
   </script>
-</body>
+  
+  </body>
 </html>
