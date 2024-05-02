@@ -1,42 +1,93 @@
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    let currentImageIndex = 0;
-    let showBlackSlide = false;
-    const images = document.querySelectorAll('.slideshow-image');
-    const blackSlide = document.querySelector('.black-slide');
-    
-    function changeSlide() {
-      if (showBlackSlide) {
-        // Hide black slide
-        blackSlide.style.display = 'none';
-        // Show the next image
-        images[currentImageIndex].style.display = 'block';
-        setTimeout(() => {
-          changeSlide();
-        }, 45000); // Show image for 45 seconds
-      } else {
-        // Hide the current image
-        images[currentImageIndex].style.display = 'none';
-        // Show black slide
-        blackSlide.style.display = 'block';
-        setTimeout(() => {
-          // Prepare for next image or reload
-          if (currentImageIndex === images.length - 1) {
-            location.reload(); // Reload when last image has finished displaying
-          } else {
-            changeSlide();
-          }
-        }, 1000); // Show black slide for 1 second
-      }
-      // Toggle between showing image and black slide
-      showBlackSlide = !showBlackSlide;
-      // Increment index or loop back to the first image
-      if (!showBlackSlide) {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-      }
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="shortcut icon" href="#">
+  <title>Glenfield Notice Board</title>
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      position: relative;
+      overflow: hidden;
+      background-color: black;
     }
 
-    // Start the slideshow after a short delay to ensure first image shows correctly
-    setTimeout(changeSlide, 45000); // Initially display the first image for 45 seconds
-  });
-</script>
+    #slideshow {
+      position: relative;
+      height: 768px;
+      width: 1024px;
+    }
+
+    .slideshow-image,
+    .black-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    .black-slide {
+      background-color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="slideshow">
+    <% images.forEach((image, index) => { %>
+      <img class="slideshow-image" src="<%= image %>" alt="Image"
+        <%= index === 0 ? 'style="display: block;"' : 'style="display: none;"' %>>
+    <% }); %>
+    <div class="black-slide"></div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let currentImageIndex = 0;
+      let showBlackSlide = false;
+      const images = document.querySelectorAll('.slideshow-image');
+      const blackSlide = document.querySelector('.black-slide');
+      
+      function changeSlide() {
+        if (showBlackSlide) {
+          // Hide black slide
+          blackSlide.style.display = 'none';
+          // Show the next image
+          images[currentImageIndex].style.display = 'block';
+          setTimeout(() => {
+            changeSlide();
+          }, 45000); // Show image for 45 seconds
+        } else {
+          // Hide the current image
+          images[currentImageIndex].style.display = 'none';
+          // Show black slide
+          blackSlide.style.display = 'block';
+          setTimeout(() => {
+            // Prepare for next image or reload
+            if (currentImageIndex === images.length - 1) {
+              location.reload(); // Reload when last image has finished displaying
+            } else {
+              changeSlide();
+            }
+          }, 1000); // Show black slide for 1 second
+        }
+        // Toggle between showing image and black slide
+        showBlackSlide = !showBlackSlide;
+        // Increment index or loop back to the first image
+        if (!showBlackSlide) {
+          currentImageIndex = (currentImageIndex + 1) % images.length;
+        }
+      }
+  
+      // Start the slideshow after a short delay to ensure first image shows correctly
+      setTimeout(changeSlide, 45000); // Initially display the first image for 45 seconds
+    });
+  </script>
+  
+  
+  </body>
+</html>
