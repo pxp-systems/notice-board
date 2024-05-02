@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const { configure } = require('./config');
+app.use(express.static('public'));
+
 
 // Basic server setup
 configure(app);

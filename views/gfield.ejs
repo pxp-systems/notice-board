@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gfield upload manager</title>
     <link rel="stylesheet" href="/styles/upload.css">
 </head>
+
 <body>
     <h1 style="text-align:center; padding: 20px;">Glenfield Notice Board</h1>
     <div style="text-align:center; margin-bottom: 20px;">
@@ -14,7 +16,9 @@
     </div>
 
     <div>
-        <button type="button" id="set-directory" class="block" onclick="setDirectory()">Use Gfield Notices</button>
+        <button type="button" id="manu" class="block" onclick="setDirectory('manu')">Use Manu Notices</button>
+        <button type="button" id="gfield" class="block" onclick="setDirectory('gfield')">Glenfield Notices</button>
+        <button type="button" id="guest" class="block" onclick="setDirectory('guest')">Guest Notices</button>
     </div>
 
     <form id="upload-form" enctype="multipart/form-data">
@@ -27,7 +31,7 @@
     </div>
     <div id="image-list"></div>
     <div id="feedback" style="color: red; text-align:center;"></div>
-        <script>
+    <script>
         document.getElementById('upload-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const fileInput = document.querySelector('input[type="file"]');
@@ -45,7 +49,7 @@
             const formData = new FormData();
             formData.append('image', fileInput.files[0]);
             formData.append('password', password);
-    
+
             try {
                 const response = await fetch('/upload', {
                     method: 'POST',
@@ -61,26 +65,45 @@
             }
         });
 
-        function setDirectory() {
-    const button = document.getElementById('set-directory');
-    button.disabled = true;  // Disable the button
-    button.textContent = "Using gfield notices";
+        function setDirectory(directory) {
+            const buttons = document.querySelectorAll('.block');
+            // Initially disable all buttons
+            buttons.forEach(button => {
+                button.disabled = true;
+            });
 
-    fetch('/set-directory', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ directory: 'public/uploads/gfield' })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);  // Success message from the server
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
+            fetch('/set-directory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ directory: `public/uploads/${directory}` })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to set directory');
+                    }
+                })
+                .then(data => {
+                    console.log(data.message);
+                    listImages();  // Refresh image list after setting directory
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayFeedback("Failed to set directory!");
+                })
+                .finally(() => {
+                    // Re-enable all buttons except the active directory button
+                    buttons.forEach(button => {
+                        if (button.id !== (directory)) {
+                            button.disabled = false;
+                        }
+                    });
+                });
+                listImages();
+        }
 
 
         async function listImages() {
@@ -90,19 +113,19 @@
                 const imageList = document.getElementById('image-list');
                 imageList.innerHTML = '';
                 images.forEach((image) => {
-    const label = document.createElement('label');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.name = 'selectedImages';
-    checkbox.value = image;
-    const img = document.createElement('img');
-    img.src = `${window.location.origin}/${image}`; // Ensure the path is correct
-    img.alt = 'Image loaded from server';
-    img.style.width = '100px';
-    label.appendChild(checkbox);
-    label.appendChild(img);
-    imageList.appendChild(label);
-});
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'selectedImages';
+                    checkbox.value = image;
+                    const img = document.createElement('img');
+                    img.src = `${window.location.origin}/${image}`;
+                    img.alt = 'Image loaded from server';
+                    img.style.width = '100px';
+                    label.appendChild(checkbox);
+                    label.appendChild(img);
+                    imageList.appendChild(label);
+                });
             } catch {
                 console.error('Failed to retrieve images');
                 displayFeedback("Failed to load images!");
@@ -125,8 +148,8 @@
             try {
                 const response = await fetch('/delete-images', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({selectedImages, password})
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ selectedImages, password })
                 });
                 if (response.ok) {
                     console.log('Images deleted successfully');
@@ -145,7 +168,10 @@
             document.getElementById('feedback').textContent = message;
         }
 
-        document.addEventListener('DOMContentLoaded', listImages);
+        document.addEventListener('DOMContentLoaded', function () {
+            listImages();
+        });
     </script>
 </body>
+
 </html>

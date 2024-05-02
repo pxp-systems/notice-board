@@ -1,17 +1,24 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const dotenv = require('dotenv');
+
 
 module.exports = function(app) {
     // Route to list all images in the directory
     app.get('/images', (req, res) => {
+        delete require.cache[require.resolve('dotenv')];
+        dotenv.config();
+
         const directoryPath = process.env.DISPLAY_DIRECTORY || 'uploads';
+        console.log('Directory Path:', directoryPath);
         fs.readdir(directoryPath, (err, files) => {
             if (err) {
                 console.error('Error reading directory:', err);
                 return res.status(500).send('Unable to scan directory: ' + err);
             }
             const filePaths = files.map(file => path.join(directoryPath, file));
+            console.log('Files:', filePaths);
             res.json(filePaths);
         });
     });
