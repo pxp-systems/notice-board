@@ -10,24 +10,24 @@
 
 <body>
     <h1 style="text-align:center; padding: 20px;">Glenfield Notice Board</h1>
-    <div style="text-align:center; margin-bottom: 20px;">
-        <a href="/manu" target="_blank">Manu notices</a> |
-        <a href="/guest" target="_blank">Guest notices</a>
+    <div>
+        <button type="button" id="manu" class="block" onclick="setDirectory('manu')">Use Manu Notices</button>
+        <button type="button" id="gfield" class="block" onclick="setDirectory('gfield')">Use Glenfield Notices</button>
+        <button type="button" id="guest" class="block" onclick="setDirectory('guest')">Use Guest Notices</button>
     </div>
 
     <div>
-        <button type="button" id="manu" class="block" onclick="setDirectory('manu')">Use Manu Notices</button>
-        <button type="button" id="gfield" class="block" onclick="setDirectory('gfield')">Glenfield Notices</button>
-        <button type="button" id="guest" class="block" onclick="setDirectory('guest')">Guest Notices</button>
+        <h4 style="text-align:center; padding: 20px;">Be patient, it may take a minute or so for the display to use the
+            chosen directory if changed. </h4>
     </div>
-
     <form id="upload-form" enctype="multipart/form-data">
         <input type="file" name="image" accept="image/*" required>
         <input type="submit" value="Upload">
     </form>
 
     <div style="text-align:center;">
-        <button onclick="deleteSelectedImages()" style="margin-top: 20px;">Delete Selected Images</button>
+        <button type="button" id="delete" class="block" onclick="deleteSelectedImages()"
+            style="margin-top: 20px;">Delete Selected Images</button>
     </div>
     <div id="image-list"></div>
     <div id="feedback" style="color: red; text-align:center;"></div>
@@ -102,7 +102,7 @@
                         }
                     });
                 });
-                listImages();
+            listImages();
         }
 
 
@@ -158,19 +158,19 @@
                 } else {
                     throw new Error('Deletion failed');
                 }
-            } catch {
-                console.error('Failed to delete images');
-                displayFeedback("Failed to delete images!");
+            } catch (error) {
+                console.error('Failed to delete images:', error.message);
+                displayFeedback("Failed to delete images: " + error.message);
+                
+
             }
+            listImages();
         }
 
         function displayFeedback(message) {
             document.getElementById('feedback').textContent = message;
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            listImages();
-        });
     </script>
 </body>
 

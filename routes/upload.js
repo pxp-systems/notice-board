@@ -14,11 +14,6 @@ module.exports = function(app) {
         res.render('gfield', { title: 'Upload Image' });
     });
 
-    // Route to display the upload form
-    app.get('/manu', (req, res) => {
-        res.render('manu', { title: 'Upload Image' });
-    });
-
     // Route to handle the image upload
     app.post('/upload', upload.single('image'), resizeImage, (req, res) => {
         // Dynamically load the .env file to ensure DISPLAY_DIRECTORY is current
@@ -47,7 +42,7 @@ module.exports = function(app) {
 
         // Save the resized image to the disk
         fs.writeFileSync(path.join(targetPath, req.file.originalname), req.file.buffer);
-        console.log("targetPath: ", targetPath);
+        //console.log("targetPath: ", targetPath);
 
         // Send the response to the client
         res.status(200).send('Image upload successful');

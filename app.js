@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 const { configure } = require('./config');
-app.use(express.static('public'));
-
+const path = require('path');
+//app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Basic server setup
 configure(app);

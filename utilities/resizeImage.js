@@ -1,18 +1,24 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const sharp = require('sharp');
 
-module.exports = function(app) {
-    app.get('/', (req, res) => {
-        const dir = path.join(__dirname, '../public/uploads');
-        fs.readdir(dir, (err, files) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('An error occurred');
-                return;
-            }
-            const images = files.filter(file => !/(^|\/)\.[^\/\.]/g.test(file));
-            res.render('index', { images });
+function resizeImage(req, res, next) {
+    if (!req.file) {
+        next();
+        return;
+    }
+    const targetWidth = 1024;
+    const targetHeight = 768;
+    sharp(req.file.buffer)
+        .resize(targetWidth, targetHeight, { fit: sharp.fit.inside })
+        .toBuffer()
+        .then(resizedBuffer => {
+            req.file.buffer = resizedBuffer;
+            req.file.size = resizedBuffer.length;
+            next();
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).send('Something went wrong with image resizing!');
         });
-    });
-};
+}
+
+module.exports = resizeImage;

@@ -11,14 +11,14 @@ module.exports = function(app) {
         dotenv.config();
 
         const directoryPath = process.env.DISPLAY_DIRECTORY || 'uploads';
-        console.log('Directory Path:', directoryPath);
+        //console.log('Directory Path:', directoryPath);
         fs.readdir(directoryPath, (err, files) => {
             if (err) {
                 console.error('Error reading directory:', err);
                 return res.status(500).send('Unable to scan directory: ' + err);
             }
             const filePaths = files.map(file => path.join(directoryPath, file));
-            console.log('Files:', filePaths);
+            //console.log('Files:', filePaths);
             res.json(filePaths);
         });
     });
@@ -26,13 +26,15 @@ module.exports = function(app) {
     // Route to delete images
     app.post('/delete-images', (req, res) => {
         const { selectedImages, password } = req.body;
-
+        console.log(req.body);
         // Check if the password is correct
         if (password !== process.env.PASSWORD) {
+            console.log("Incorrect password...", password, process.env.PASSWORD)
             return res.status(401).send("Unauthorized: Incorrect Password");
         }
 
         const directoryPath = path.join(__dirname, '..', process.env.DISPLAY_DIRECTORY || 'uploads');
+        console.log('Directory Path:', directoryPath);
         selectedImages.forEach((imageUrl, index) => {
             const imageName = imageUrl.split('/').pop();
             fs.unlink(path.join(directoryPath, imageName), err => {
