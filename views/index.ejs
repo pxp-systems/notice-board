@@ -8,33 +8,38 @@
   <link rel="shortcut icon" href="#">
   <title>Glenfield Notice Board</title>
   <style>
-    body,
-    html {
+    body, html {
       height: 100%;
       margin: 0;
       position: relative;
       overflow: hidden;
       background-color: black;
     }
-
+  
     #slideshow {
       position: relative;
-      height: 768px;
-      width: 1024px;
+      max-width: 1024px; /* Max width of the original size */
+      max-height: 768px; /* Max height of the original size */
+      width: 100vw; /* Make it responsive to the viewport width */
+      height: calc(100vw * (768 / 1024)); /* Maintain the aspect ratio */
+      margin: 0 auto; /* Centering the slideshow */
     }
-
-    .slideshow-image,
-    .black-slide {
+  
+    .slideshow-image, .black-slide {
       position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       display: none;
+      object-fit: cover; /* Ensure the images cover the area without distortion */
     }
-
+  
     .black-slide {
       background-color: black;
     }
   </style>
+  
 </head>
 
 <body>
