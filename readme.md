@@ -3,8 +3,6 @@ This project produces a raspberry pi static website that is used in a rugby club
 
 The raspberry pi will be plugged into a tv, and display the carousel.
 
-We want to have a simple but secure way of uploading new content. Ideally this would run a pipeline that helps to prepare the images so that they display optimally on the tv. 
-
 # Getting PI set up to be supportable
 ## Install no-ip
 ### 1. Install the No-IP Dynamic Update Client on Raspberry Pi
